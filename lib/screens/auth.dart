@@ -1,3 +1,4 @@
+import 'package:chat_application/widgets/user_image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,6 +41,7 @@ class AuthScreen extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              if (!cubit.isLogin) const UserImageImagePicker(),
                               TextFormField(
                                 validator: (value) {
                                   if (value!.isEmpty) {
@@ -55,6 +57,22 @@ class AuthScreen extends StatelessWidget {
                                   cubit.email = newValue!;
                                 },
                               ),
+                              if (!cubit.isLogin)
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty ||
+                                        value.trim().length < 4) {
+                                      return 'Enter Valid UserName (at least 4 characters)';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Username'),
+                                  enableSuggestions: false,
+                                  onSaved: (newValue) {
+                                    cubit.username = newValue!;
+                                  },
+                                ),
                               TextFormField(
                                 obscureText: true,
                                 validator: (value) {

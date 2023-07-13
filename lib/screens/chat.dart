@@ -1,8 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:chat_application/screens/chat_messages.dart';
+
+import 'new_messages.dart';
+
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+  final DocumentSnapshot user;
+  const ChatScreen({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +25,14 @@ class ChatScreen extends StatelessWidget {
             },
           )
         ],
-        title: const Text('Flutter Chat Application'),
+        title: const Text('FlutterChat'),
       ),
-      body: const Center(child: Text('Logged in!')),
+      body: Column(
+        children: [
+          Expanded(child: ChatMessages(user: user)),
+          NewMessages(user: user),
+        ],
+      ),
     );
   }
 }

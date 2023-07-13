@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
               return const SplashScreen();
             }
             if (snapshot.hasData) {
-              return Pager.chat;
+              return Pager.messages;
             }
             return Pager.auth;
           },
