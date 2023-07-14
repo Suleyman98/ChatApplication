@@ -18,8 +18,17 @@ class _NewMessagesState extends State<NewMessages> {
     super.dispose();
   }
 
+  String chatRoomId(String me, String you) {
+    if (me[0].toLowerCase().codeUnits[0] > you.toLowerCase().codeUnits[0]) {
+      return '$me$you';
+    } else {
+      return '$you$me';
+    }
+  }
+
   void _submitMessage() async {
     final enteredMessage = messageController.text;
+
     if (enteredMessage.trim().isEmpty) {
       return;
     }
@@ -28,8 +37,8 @@ class _NewMessagesState extends State<NewMessages> {
 
     await FirebaseFirestore.instance
         .collection('chat')
-        .doc(
-            '${FirebaseAuth.instance.currentUser!.uid}_${widget.user['userId']}')
+        .doc(chatRoomId(
+            FirebaseAuth.instance.currentUser!.uid, widget.user['userId']))
         .collection('messages')
         .add({
       'message': enteredMessage,

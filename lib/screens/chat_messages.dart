@@ -3,9 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ChatMessages extends StatelessWidget {
+class ChatMessages extends StatefulWidget {
   final DocumentSnapshot user;
   const ChatMessages({super.key, required this.user});
+
+  @override
+  State<ChatMessages> createState() => _ChatMessagesState();
+}
+
+class _ChatMessagesState extends State<ChatMessages> {
+  String chatRoomId(String me, String you) {
+    if (me[0].toLowerCase().codeUnits[0] > you.toLowerCase().codeUnits[0]) {
+      return '$me$you';
+    } else {
+      return '$you$me';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +46,10 @@ class ChatMessages extends StatelessWidget {
       },
       stream: FirebaseFirestore.instance
           .collection('chat')
-          .doc('${currentUser}_${user['userId']}')
+          .doc(chatRoomId(
+              FirebaseAuth.instance.currentUser!.uid, widget.user['userId']))
           .collection('messages')
+          .orderBy('createdAt', descending: true)
           .snapshots(),
     );
   }
