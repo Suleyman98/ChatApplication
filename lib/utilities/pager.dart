@@ -1,4 +1,5 @@
 import 'package:chat_application/screens/chat.dart';
+import 'package:chat_application/screens/doc.dart';
 import 'package:chat_application/screens/messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,10 @@ class Pager {
 
   static Widget chat(DocumentSnapshot user) {
     return ChatScreen(user: user);
+  }
+
+  static Widget doc(DocumentSnapshot message) {
+    return DocScreen(message: message);
   }
 
   static get users => const UsersScreen();

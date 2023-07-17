@@ -20,7 +20,7 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final themez = Theme.of(context);
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,

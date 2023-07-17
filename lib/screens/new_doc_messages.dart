@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class NewMessages extends StatefulWidget {
-  final DocumentSnapshot user;
-  const NewMessages({super.key, required this.user});
+class NewDocMessages extends StatefulWidget {
+  final DocumentSnapshot message;
+  const NewDocMessages({super.key, required this.message});
 
   @override
-  State<NewMessages> createState() => _NewMessagesState();
+  State<NewDocMessages> createState() => _NewDocMessagesState();
 }
 
-class _NewMessagesState extends State<NewMessages> {
+class _NewDocMessagesState extends State<NewDocMessages> {
   final messageController = TextEditingController();
   @override
   void dispose() {
@@ -37,28 +37,31 @@ class _NewMessagesState extends State<NewMessages> {
 
     await FirebaseFirestore.instance
         .collection('chat')
-        .doc(chatRoomId(
-            FirebaseAuth.instance.currentUser!.uid, widget.user['userId']))
+        .doc(chatRoomId(widget.message['me'], widget.message['you']))
         .collection('messages')
         .add({
-      'message': enteredMessage,
-      'createdAt': Timestamp.now(),
-      'me': FirebaseAuth.instance.currentUser!.uid,
-      'you': widget.user['userId'],
-      'username': widget.user['username'],
-      'userImage': widget.user['image_url']
-    }).then((value) => FirebaseFirestore.instance
+          ''
+              'message': enteredMessage,
+          'createdAt': Timestamp.now(),
+          'me': FirebaseAuth.instance.currentUser!.uid,
+          'you': widget.message['you'],
+          'username': widget.message['username'],
+          'userImage': widget.message['userImage']
+        })
+        .then((value) => FirebaseFirestore.instance
                 .collection('chat')
-                .doc(chatRoomId(FirebaseAuth.instance.currentUser!.uid,
-                    widget.user['userId']))
+                .doc(chatRoomId(widget.message['you'], widget.message['me']))
                 .set({
               'message': enteredMessage,
               'createdAt': Timestamp.now(),
               'me': FirebaseAuth.instance.currentUser!.uid,
-              'you': widget.user['userId'],
-              'username': widget.user['username'],
-              'userImage': widget.user['image_url']
-            }));
+              'you': widget.message['you'],
+              'username': widget.message['username'],
+              'userImage': widget.message['userImage']
+            }))
+        .catchError((e) {
+          print(e.toString());
+        });
   }
 
   @override

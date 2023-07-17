@@ -24,12 +24,13 @@ class MessagesScreen extends StatelessWidget {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 DocumentSnapshot user = snapshot.data!.docs[index];
+
                 if (user.id.contains(FirebaseAuth.instance.currentUser!.uid)) {
                   return ListTile(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) {
-                          return Pager.chat(user);
+                          return Pager.doc(user);
                         },
                       ));
                     },
