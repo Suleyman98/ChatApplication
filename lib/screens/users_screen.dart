@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../utilities/pager.dart';
@@ -19,22 +20,25 @@ class UsersScreen extends StatelessWidget {
             return ListView.builder(
               itemBuilder: (context, index) {
                 DocumentSnapshot user = snapshot.data!.docs[index];
-
-                return ListTile(
-                  leading:
-                      CircleAvatar(child: Image.network(user['image_url'])),
-                  title: Text(user['username']),
-                  subtitle: Text(user['email']),
-                  trailing: IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) {
-                            return Pager.chat(user);
-                          },
-                        ));
-                      }),
-                );
+                if (user.id != FirebaseAuth.instance.currentUser!.uid) {
+                  return ListTile(
+                    leading:
+                        CircleAvatar(child: Image.network(user['image_url'])),
+                    title: Text(user['username']),
+                    subtitle: Text(user['email']),
+                    trailing: IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) {
+                              return Pager.chat(user);
+                            },
+                          ));
+                        }),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
               },
               itemCount: snapshot.data!.docs.length,
             );

@@ -47,7 +47,18 @@ class _NewMessagesState extends State<NewMessages> {
       'you': widget.user['userId'],
       'username': widget.user['username'],
       'userImage': widget.user['image_url']
-    });
+    }).then((value) => FirebaseFirestore.instance
+          ..collection('chat')
+              .doc(chatRoomId(FirebaseAuth.instance.currentUser!.uid,
+                  widget.user['userId']))
+              .set({
+            'message': enteredMessage,
+            'createdAt': Timestamp.now(),
+            'me': FirebaseAuth.instance.currentUser!.uid,
+            'you': widget.user['userId'],
+            'username': widget.user['username'],
+            'userImage': widget.user['image_url']
+          }));
   }
 
   @override

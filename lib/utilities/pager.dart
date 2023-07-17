@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/auth_cubit/auth_cubit_cubit.dart';
+import '../cubit/home_cubit/home_cubit.dart';
 import '../screens/auth.dart';
 import '../screens/users_screen.dart';
 
@@ -21,5 +22,8 @@ class Pager {
   }
 
   static get users => const UsersScreen();
-  static get messages => const MessagesScreen();
+  static get messages => BlocProvider(
+        create: (context) => HomeCubit(),
+        child: const MessagesScreen(),
+      );
 }
